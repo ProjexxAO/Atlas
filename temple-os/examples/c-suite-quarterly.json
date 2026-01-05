@@ -1,0 +1,222 @@
+{
+  "scenario": "C-Suite Use Case: Given our Q2 results and OKRs, what should we prioritize next quarter?",
+  "user_profile": {
+    "user_id": "ceo_456",
+    "org_id": "org_acme",
+    "mode": "org",
+    "roles": ["CEO", "executive"],
+    "org": {
+      "name": "Acme Corp",
+      "industry": "SaaS",
+      "size": 150,
+      "q2_results": {
+        "revenue": "$5.2M (target: $6M)",
+        "customer_count": 450,
+        "churn": "4% (target: 3%)",
+        "nps": 42
+      },
+      "current_okrs": [
+        {
+          "objective": "Achieve product-market fit in Enterprise segment",
+          "key_results": [
+            "Close 10 enterprise deals (actual: 6)",
+            "Enterprise ARR $2M (actual: $1.4M)"
+          ],
+          "status": "behind"
+        },
+        {
+          "objective": "Improve customer retention",
+          "key_results": [
+            "Reduce churn to 3% (actual: 4%)",
+            "Increase NPS to 50 (actual: 42)"
+          ],
+          "status": "behind"
+        }
+      ]
+    }
+  },
+  "flow": [
+    {
+      "step": 1,
+      "service": "Outer Court",
+      "request": {
+        "raw_request": {
+          "request_id": "req_q3_strategy_001",
+          "channel": "web",
+          "user_identity": {
+            "user_id": "ceo_456",
+            "org_id": "org_acme",
+            "mode": "org",
+            "roles": ["CEO", "executive"]
+          },
+          "raw_input": "Given our Q2 results (revenue $5.2M vs target $6M, 6/10 enterprise deals closed, churn at 4%), what should we prioritize in Q3?"
+        }
+      },
+      "response": {
+        "classified_request": {
+          "domain": "strategy",
+          "intent": "plan",
+          "priority": "high",
+          "sensitivity": "confidential",
+          "requires_inner_court": true
+        }
+      }
+    },
+    {
+      "step": 2,
+      "service": "Inner Court",
+      "response": {
+        "task_plan": {
+          "high_level_goal": "Develop Q3 strategic priorities based on Q2 performance analysis",
+          "subtasks": [
+            {
+              "assigned_priest": "strategy",
+              "description": "Analyze Q2 performance and recommend Q3 strategic priorities"
+            },
+            {
+              "assigned_priest": "finance",
+              "description": "Assess financial health and revenue trajectory"
+            },
+            {
+              "assigned_priest": "ops",
+              "description": "Identify operational bottlenecks affecting enterprise sales"
+            }
+          ],
+          "needs_alignment_review": true
+        },
+        "priest_outputs": {
+          "strategy": {
+            "strategic_analysis": "Q2 underperformance driven by two key factors: enterprise sales cycle longer than expected, and churn indicating product-market fit issues in mid-market",
+            "key_insights": [
+              "Enterprise deals are closing but taking 30% longer than forecast",
+              "Churn concentrated in customers 6-12 months old",
+              "NPS gap suggests feature gaps for power users"
+            ],
+            "recommended_objectives": [
+              {
+                "objective": "Accelerate enterprise sales velocity",
+                "key_results": [
+                  "Reduce avg sales cycle from 120 to 90 days",
+                  "Close 12 enterprise deals in Q3",
+                  "Achieve $2.5M enterprise ARR"
+                ],
+                "rationale": "Current pipeline supports this with process optimization"
+              },
+              {
+                "objective": "Achieve best-in-class retention",
+                "key_results": [
+                  "Reduce churn to 2.5%",
+                  "Implement 3 most-requested features",
+                  "NPS to 48+"
+                ],
+                "rationale": "Retention improvements have 3x ROI vs new acquisition"
+              }
+            ],
+            "risks_and_mitigations": [
+              {
+                "risk": "Resource constraints - can't optimize both simultaneously",
+                "mitigation": "Prioritize retention in Month 1, then enterprise velocity"
+              }
+            ]
+          },
+          "finance": {
+            "analysis": "On track for $20M ARR run rate by year-end if Q3 targets met",
+            "recommendations": [
+              "Invest $300K in customer success team (2 CSMs)",
+              "Allocate $200K to enterprise sales enablement"
+            ]
+          },
+          "ops": {
+            "analysis": "Sales ops friction: custom contract requirements adding 3-4 weeks per deal",
+            "recommendations": [
+              "Implement contract automation",
+              "Create enterprise playbook",
+              "Hire sales operations manager"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 3,
+      "service": "Ark",
+      "endpoint": "POST /api/v1/ark/post-response-check",
+      "note": "Checks that financial data isn't being leaked inappropriately",
+      "response": {
+        "policy_check": {
+          "allowed": true,
+          "warnings": ["Executive financial data - ensure secure channel"],
+          "policy_ids_triggered": ["policy_exec_data"]
+        }
+      }
+    },
+    {
+      "step": 4,
+      "service": "Sanctuary",
+      "response": {
+        "final_response": {
+          "user_facing_text": "# Q3 Strategic Priorities: Analysis & Recommendations\n\n## Q2 Performance Summary\nRevenue: $5.2M (87% of target)\nEnterprise: 6/10 deals closed, $1.4M ARR\nChurn: 4% (target: 3%)\n\n## Root Cause Analysis\n1. **Enterprise sales cycles** running 30% longer than forecast (120 vs 90 days)\n2. **Churn concentrated** in 6-12 month cohort, indicating onboarding/feature gaps\n3. **Sales ops friction**: Custom contracts adding 3-4 weeks per deal\n\n## Q3 Strategic Recommendations\n\n### Priority 1: Achieve Best-in-Class Retention (Month 1-2)\n**Rationale**: Retention improvements deliver 3x ROI vs new acquisition, and current churn is bleeding revenue.\n\n**OKRs**:\n- Reduce churn to 2.5%\n- Ship 3 most-requested enterprise features\n- Increase NPS to 48+\n\n**Required Investment**: $300K (2 additional CSMs)\n\n### Priority 2: Accelerate Enterprise Velocity (Month 2-3)\n**Rationale**: Pipeline exists; process optimization can unlock deals faster.\n\n**OKRs**:\n- Reduce sales cycle to 90 days\n- Close 12 enterprise deals\n- Reach $2.5M enterprise ARR\n\n**Required Investment**: $200K (sales enablement + contract automation)\n\n**Quick Wins**:\n- Implement contract automation (Week 1)\n- Create enterprise playbook (Week 2)\n- Hire sales ops manager (Month 1)\n\n## Financial Impact\nIf executed, you'll be on track for **$20M ARR run rate** by year-end, vs $18M on current trajectory.\n\n## Next Steps\n1. Review this plan with leadership team\n2. Get board alignment on investments\n3. I can help create detailed execution plans for each priority\n\nShall I create OKR tracking dashboards and weekly check-in frameworks?",
+          "structured_output": {
+            "q3_okrs": [
+              {
+                "objective": "Achieve best-in-class retention",
+                "priority": 1,
+                "timeline": "Month 1-2",
+                "investment": "$300K"
+              },
+              {
+                "objective": "Accelerate enterprise velocity",
+                "priority": 2,
+                "timeline": "Month 2-3",
+                "investment": "$200K"
+              }
+            ],
+            "financial_impact": {
+              "projected_arr_with_plan": "$20M",
+              "projected_arr_current_trajectory": "$18M",
+              "upside": "$2M"
+            }
+          },
+          "explanations": {
+            "reasoning": "Sequencing retention first creates foundation for enterprise growth",
+            "sources": ["strategy", "finance", "ops"],
+            "confidence": "high",
+            "assumptions": [
+              "Pipeline quality remains consistent",
+              "Team can execute both priorities",
+              "Board approves investment"
+            ]
+          },
+          "actions_triggered": [
+            {
+              "type": "create_okr_dashboard",
+              "target_system": "internal",
+              "payload": {
+                "org_id": "org_acme",
+                "quarter": "Q3",
+                "okrs": "[structured OKRs]"
+              }
+            },
+            {
+              "type": "schedule_leadership_review",
+              "target_system": "internal",
+              "payload": {
+                "meeting_type": "Q3 planning",
+                "attendees": ["leadership_team"]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "notes": [
+    "This flow demonstrates:",
+    "- Org mode with executive permissions",
+    "- High priority, confidential classification",
+    "- Multiple priests (Strategy, Finance, Ops) collaborating",
+    "- Ark policy check for sensitive data",
+    "- Action triggers for OKR tracking and meeting scheduling",
+    "- Executive-grade strategic reasoning"
+  ]
+}

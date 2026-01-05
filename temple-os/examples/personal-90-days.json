@@ -1,0 +1,200 @@
+{
+  "scenario": "Personal Use Case: Design my next 90 days based on my goals",
+  "user_profile": {
+    "user_id": "user_123",
+    "mode": "personal",
+    "goals": [
+      {
+        "goal_id": "goal_1",
+        "title": "Learn machine learning fundamentals",
+        "category": "personal",
+        "status": "active"
+      },
+      {
+        "goal_id": "goal_2",
+        "title": "Improve physical fitness",
+        "category": "personal",
+        "status": "active"
+      },
+      {
+        "goal_id": "goal_3",
+        "title": "Launch side project",
+        "category": "professional",
+        "status": "active"
+      }
+    ]
+  },
+  "flow": [
+    {
+      "step": 1,
+      "service": "Outer Court",
+      "endpoint": "POST /api/v1/outer-court",
+      "request": {
+        "raw_request": {
+          "request_id": "req_90days_001",
+          "timestamp": "2026-01-05T10:00:00Z",
+          "channel": "web",
+          "user_identity": {
+            "user_id": "user_123",
+            "org_id": null,
+            "active_team_id": null,
+            "active_org_id": null,
+            "roles": ["individual"],
+            "permissions": [],
+            "mode": "personal",
+            "auth_context": {
+              "email": "user@example.com"
+            }
+          },
+          "raw_input": "Help me design my next 90 days based on my current goals. I want to make real progress on learning ML, getting fit, and launching my side project.",
+          "metadata": {
+            "locale": "en-US",
+            "timezone": "America/New_York"
+          }
+        }
+      },
+      "response": {
+        "success": true,
+        "data": {
+          "next_step": "inner_court",
+          "classified_request": {
+            "request_id": "req_90days_001",
+            "normalized_text": "Help me design my next 90 days based on my current goals: learning ML, getting fit, and launching my side project.",
+            "language": "en",
+            "domain": "life",
+            "intent": "plan",
+            "priority": "normal",
+            "sensitivity": "internal",
+            "safety_flags": [],
+            "requires_inner_court": true,
+            "attachments": []
+          }
+        }
+      }
+    },
+    {
+      "step": 2,
+      "service": "Inner Court",
+      "endpoint": "POST /api/v1/inner-court",
+      "request": {
+        "classified_request": "[from step 1]"
+      },
+      "response": {
+        "success": true,
+        "data": {
+          "task_plan": {
+            "plan_id": "plan_001",
+            "high_level_goal": "Create a comprehensive 90-day plan integrating ML learning, fitness, and side project launch",
+            "subtasks": [
+              {
+                "subtask_id": "subtask_1",
+                "description": "Design personal 90-day roadmap with time allocation across all three goals",
+                "assigned_priest": "life",
+                "inputs": {
+                  "goals": ["ML learning", "fitness", "side project"],
+                  "timeframe": "90 days"
+                },
+                "status": "pending"
+              },
+              {
+                "subtask_id": "subtask_2",
+                "description": "Create learning curriculum for ML fundamentals",
+                "assigned_priest": "learning",
+                "inputs": {
+                  "subject": "machine learning",
+                  "level": "fundamentals",
+                  "duration": "90 days"
+                },
+                "status": "pending"
+              }
+            ],
+            "target_priests": ["life", "learning"],
+            "estimated_complexity": "high",
+            "needs_alignment_review": false
+          },
+          "context_bundle": {
+            "personal_context": {
+              "goals": "[user's 3 active goals]"
+            }
+          },
+          "priest_outputs": {
+            "life": {
+              "analysis": "User has three parallel goals requiring careful time management",
+              "recommendations": [
+                "Allocate 5 hours/week to ML learning (online courses + practice)",
+                "Schedule 4 hours/week for fitness (3x gym, 1x cardio)",
+                "Dedicate 6 hours/week to side project development",
+                "Reserve 1 hour/week for planning and review"
+              ],
+              "timeline": "Weekly sprints with monthly milestones",
+              "success_metrics": [
+                "Complete 2 ML courses",
+                "Achieve fitness target (measurable)",
+                "Launch MVP of side project"
+              ]
+            },
+            "learning": {
+              "analysis": "ML fundamentals require structured curriculum over 90 days",
+              "recommendations": [
+                "Week 1-4: Python for ML + basic statistics",
+                "Week 5-8: Supervised learning algorithms",
+                "Week 9-12: Neural networks and deep learning intro",
+                "Weekly: Apply concepts to side project where possible"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "step": 3,
+      "service": "Sanctuary",
+      "endpoint": "POST /api/v1/sanctuary/llm",
+      "response": {
+        "success": true,
+        "data": {
+          "final_response": {
+            "user_facing_text": "# Your 90-Day Personal Development Plan\n\nI've designed a comprehensive plan that balances your three goals...\n\n## Weekly Time Allocation\n- **ML Learning**: 5 hours (online courses + hands-on practice)\n- **Fitness**: 4 hours (3x strength training, 1x cardio)\n- **Side Project**: 6 hours (development sprints)\n- **Planning & Review**: 1 hour\n\n## Month 1: Foundation\n- Start Python for ML course\n- Establish gym routine\n- Complete side project architecture\n\n## Month 2: Building\n- Supervised learning algorithms\n- Increase training intensity\n- Develop core features\n\n## Month 3: Integration\n- Neural networks intro\n- Maintain fitness momentum\n- Launch MVP\n\n## Success Metrics\n✓ Complete 2 ML courses\n✓ Hit fitness target (specific to your goal)\n✓ Live MVP with 10 users\n\nI recommend starting this Monday. Should I help you set up weekly reminders and create specific milestones?",
+            "structured_output": {
+              "weekly_schedule": {
+                "ml_learning": 5,
+                "fitness": 4,
+                "side_project": 6,
+                "planning": 1
+              },
+              "milestones": [
+                {
+                  "month": 1,
+                  "goals": ["Foundation", "Establish routines"]
+                },
+                {
+                  "month": 2,
+                  "goals": ["Building", "Core development"]
+                },
+                {
+                  "month": 3,
+                  "goals": ["Integration", "Launch"]
+                }
+              ]
+            },
+            "explanations": {
+              "reasoning": "Balanced time allocation prevents burnout while ensuring progress on all fronts",
+              "sources": ["life", "learning"],
+              "confidence": "high"
+            },
+            "actions_triggered": [
+              {
+                "type": "create_90day_plan",
+                "target_system": "internal",
+                "payload": {
+                  "user_id": "user_123",
+                  "plan_data": "[structured plan]"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
