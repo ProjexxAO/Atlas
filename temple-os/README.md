@@ -22,43 +22,54 @@ User → Outer Court → Inner Court → Priests → Sanctuary → Ark → River
               Memory (continuous learning)
 ```
 
-## 🎯 NEW: Use Temple Architecture for ANY App
+## 🎯 NEW: Universal Framework for ANY App, ANY Industry
 
 **Want to build your own app using this architecture?**
 
-We've created a **complete specification generator** that goes from idea to fully-detailed Lovable prompts:
+We've created a **truly universal specification generator** that works for **ANY industry, ANY sector**:
 
-### From Idea to Complete App Spec in 2-4 Hours
+### 🌍 From Idea to Complete App Spec (Any Industry)
 
-**Input**: "Build me a Scheduling app for construction"
+**Input**: Your app idea in ANY industry
+- Healthcare? ✅ "Telemedicine platform for patients"
+- E-commerce? ✅ "Marketplace for local artisans"
+- Education? ✅ "Learning platform for universities"
+- Finance? ✅ "Robo-advisor for millennials"
+- Real Estate? ✅ "Property management for landlords"
+- Manufacturing? ✅ "Inventory system for factories"
+- **ANY industry? ✅ Template adapts automatically**
 
 **Output**: 35+ Lovable-ready prompts covering:
-- Complete database schema
-- All UI screens and components
-- User flows and navigation
-- Authentication and authorization
-- API endpoints and business logic
-- Design system (colors, fonts, components)
+- Complete database schema (customized to your industry)
+- All UI screens and components (industry-appropriate design)
+- User flows and navigation (sector-specific patterns)
+- Authentication and authorization (compliance-aware)
+- API endpoints and business logic (domain-specific)
+- Design system (industry color psychology)
 - Notifications, reports, search
 - Mobile responsiveness
 - Security, testing, deployment
-- **EVERYTHING you need**
+- **EVERYTHING you need, adapted to YOUR sector**
 
 ### Quick Start
 
-1. **Open**: `docs/MIRO_QUICK_START.md` ← Start here!
-2. **Use Template**: `docs/MIRO_APP_SPEC_GENERATOR.md`
-3. **Fill in your app idea** (30 min for quick, 4 hours for complete)
-4. **Copy prompts to Lovable** in order
-5. **Get your complete app** in ~1 week
+1. **Read**: `docs/MIRO_QUICK_START.md` ← Start here!
+2. **Use**: `docs/UNIVERSAL_APP_SPEC_GENERATOR.md` ← **NEW: Works for ANY industry**
+3. **Fill in Section 0** with your industry and app idea (15 min)
+4. **Work through sections** - they adapt to your sector (2-4 hours)
+5. **Copy prompts to Lovable** in order
+6. **Get your complete app** in ~1 week
 
 **Perfect for**:
-- Solo developers planning new projects
-- Teams doing sprint planning
-- Agencies scoping client work
-- Anyone using Lovable to build apps
+- Solo developers in any industry
+- Teams planning domain-specific apps
+- Agencies serving multiple sectors
+- Anyone building with Lovable
+- **Works for**: Healthcare, Finance, E-commerce, Education, SaaS, Manufacturing, Legal, Real Estate, Food, Logistics, and more
 
-See [MIRO_QUICK_START.md](docs/MIRO_QUICK_START.md) for full walkthrough.
+**Includes examples from**: Healthcare, E-commerce, Education, Finance, Real Estate, Manufacturing, Legal, and SaaS industries.
+
+See [MIRO_QUICK_START.md](docs/MIRO_QUICK_START.md) for walkthrough and [UNIVERSAL_APP_SPEC_GENERATOR.md](docs/UNIVERSAL_APP_SPEC_GENERATOR.md) for the template.
 
 ---
 

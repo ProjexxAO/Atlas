@@ -26,6 +26,8 @@ Welcome to the Temple OS documentation. This guide will help you navigate all av
 | Document | Time | Best For |
 |----------|------|----------|
 | [Which Template?](MIRO_WHICH_TEMPLATE.md) | 2 min | **START HERE** - Decision guide |
+| [**Universal App Spec Generator**](UNIVERSAL_APP_SPEC_GENERATOR.md) | 2-4 hours | **⭐ NEW: Works for ANY industry** |
+| [Quick Start Guide](MIRO_QUICK_START.md) | 15 min | Step-by-step walkthrough |
 | [Checklist](MIRO_CHECKLIST.md) | 5-30 min | Quick planning, brainstorms, MVPs |
 | [Quick Template](MIRO_QUICK_TEMPLATE.md) | 2 hours | Card-based planning, workshops |
 | [Full Template](MIRO_TEMPLATE.md) | Half day | Complete architecture, production apps |
