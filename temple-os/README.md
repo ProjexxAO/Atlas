@@ -22,6 +22,46 @@ User → Outer Court → Inner Court → Priests → Sanctuary → Ark → River
               Memory (continuous learning)
 ```
 
+## 🎯 NEW: Use Temple Architecture for ANY App
+
+**Want to build your own app using this architecture?**
+
+We've created a **complete specification generator** that goes from idea to fully-detailed Lovable prompts:
+
+### From Idea to Complete App Spec in 2-4 Hours
+
+**Input**: "Build me a Scheduling app for construction"
+
+**Output**: 35+ Lovable-ready prompts covering:
+- Complete database schema
+- All UI screens and components
+- User flows and navigation
+- Authentication and authorization
+- API endpoints and business logic
+- Design system (colors, fonts, components)
+- Notifications, reports, search
+- Mobile responsiveness
+- Security, testing, deployment
+- **EVERYTHING you need**
+
+### Quick Start
+
+1. **Open**: `docs/MIRO_QUICK_START.md` ← Start here!
+2. **Use Template**: `docs/MIRO_APP_SPEC_GENERATOR.md`
+3. **Fill in your app idea** (30 min for quick, 4 hours for complete)
+4. **Copy prompts to Lovable** in order
+5. **Get your complete app** in ~1 week
+
+**Perfect for**:
+- Solo developers planning new projects
+- Teams doing sprint planning
+- Agencies scoping client work
+- Anyone using Lovable to build apps
+
+See [MIRO_QUICK_START.md](docs/MIRO_QUICK_START.md) for full walkthrough.
+
+---
+
 ## ✨ Features
 
 ### For Individuals (Personal Mode)
