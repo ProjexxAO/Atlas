@@ -1,6 +1,7 @@
 /**
  * Agent Seeding Function
  * Seeds initial agents across all 12 tribes
+ * Compatible with existing sonic_agents schema + new evolution columns
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -10,20 +11,28 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Tribe configuration with sector mapping
 const TRIBES = [
-  { name: 'JUDAH', sector: 'STRATEGY', count: 1000 },
-  { name: 'REUBEN', sector: 'OPERATIONS', count: 1000 },
-  { name: 'GAD', sector: 'SECURITY', count: 1000 },
-  { name: 'ASHER', sector: 'FINANCE', count: 1000 },
-  { name: 'NAPHTALI', sector: 'TECHNOLOGY', count: 1000 },
-  { name: 'MANASSEH', sector: 'GENERAL', count: 1000 },
-  { name: 'SIMEON', sector: 'RESEARCH', count: 1000 },
-  { name: 'LEVI', sector: 'LEGAL', count: 1000 },
-  { name: 'ISSACHAR', sector: 'OPERATIONS', count: 1000 },
-  { name: 'ZEBULUN', sector: 'COMMUNICATIONS', count: 1000 },
-  { name: 'JOSEPH', sector: 'CREATIVE', count: 1000 },
-  { name: 'BENJAMIN', sector: 'RESEARCH', count: 1000 },
+  { name: 'JUDAH', sector: 'STRATEGY', waveform: 'PULSE', class: 'ALPHA' },
+  { name: 'REUBEN', sector: 'OPERATIONS', waveform: 'SINE', class: 'BETA' },
+  { name: 'GAD', sector: 'SECURITY', waveform: 'SQUARE', class: 'GAMMA' },
+  { name: 'ASHER', sector: 'FINANCE', waveform: 'SINE', class: 'BETA' },
+  { name: 'NAPHTALI', sector: 'TECHNOLOGY', waveform: 'SAW', class: 'DELTA' },
+  { name: 'MANASSEH', sector: 'GENERAL', waveform: 'SINE', class: 'BETA' },
+  { name: 'SIMEON', sector: 'RESEARCH', waveform: 'TRIANGLE', class: 'GAMMA' },
+  { name: 'LEVI', sector: 'LEGAL', waveform: 'SINE', class: 'ALPHA' },
+  { name: 'ISSACHAR', sector: 'OPERATIONS', waveform: 'SQUARE', class: 'DELTA' },
+  { name: 'ZEBULUN', sector: 'COMMUNICATIONS', waveform: 'SAW', class: 'GAMMA' },
+  { name: 'JOSEPH', sector: 'CREATIVE', waveform: 'TRIANGLE', class: 'ALPHA' },
+  { name: 'BENJAMIN', sector: 'RESEARCH', waveform: 'PULSE', class: 'DELTA' },
 ] as const;
+
+// Tribe colors
+const TRIBE_COLORS: Record<string, string> = {
+  JUDAH: '#FFD700', REUBEN: '#3B82F6', GAD: '#DC2626', ASHER: '#22C55E',
+  NAPHTALI: '#8B5CF6', MANASSEH: '#065F46', SIMEON: '#F59E0B', LEVI: '#7C3AED',
+  ISSACHAR: '#92400E', ZEBULUN: '#0EA5E9', JOSEPH: '#EAB308', BENJAMIN: '#6B7280',
+};
 
 const AGENT_NAMES = {
   prefixes: ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta', 'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega'],
@@ -53,14 +62,12 @@ function generateSpecializations(sector: string): Record<string, number> {
     LEGAL: ['contract_review', 'compliance', 'regulatory_analysis', 'policy_interpretation'],
     COMMUNICATIONS: ['content_creation', 'messaging', 'stakeholder_engagement', 'translation'],
     CREATIVE: ['design', 'ideation', 'visual_communication', 'storytelling'],
-    MEDICAL: ['diagnosis_support', 'treatment_planning', 'patient_monitoring', 'medical_research'],
   };
 
   const specs = baseSpecs[sector] || baseSpecs.GENERAL;
   const result: Record<string, number> = {};
 
   specs.forEach((spec, idx) => {
-    // Primary specialization gets higher score
     result[spec] = idx === 0 ? 0.3 + Math.random() * 0.4 : 0.1 + Math.random() * 0.3;
   });
 
@@ -86,18 +93,57 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const {
-      userId = null,
-      orgId = null,
-      agentsPerTribe = 100, // Default to 100 for testing, increase for production
+      userId,
+      agentsPerTribe = 100,
       clearExisting = false,
+      updateExisting = false, // Update existing agents with tribe/evolution columns
     } = body;
+
+    if (!userId) {
+      throw new Error('userId is required');
+    }
 
     // Optionally clear existing agents
     if (clearExisting) {
-      if (userId) {
-        await supabase.from('sonic_agents').delete().eq('user_id', userId);
-      } else {
-        await supabase.from('sonic_agents').delete().is('user_id', null);
+      await supabase.from('sonic_agents').delete().eq('user_id', userId);
+    }
+
+    // If updateExisting, assign tribes to existing agents
+    if (updateExisting) {
+      const { data: existingAgents } = await supabase
+        .from('sonic_agents')
+        .select('id, sector')
+        .eq('user_id', userId);
+
+      if (existingAgents && existingAgents.length > 0) {
+        const updates = existingAgents.map((agent, idx) => {
+          // Assign tribe based on sector or round-robin
+          const tribeMatch = TRIBES.find(t => t.sector === agent.sector) || TRIBES[idx % TRIBES.length];
+
+          return supabase
+            .from('sonic_agents')
+            .update({
+              tribe: tribeMatch.name,
+              seal_level: 1,
+              role: idx === 0 ? 'leader' : idx < 10 ? 'elder' : 'worker',
+              success_rate: 0.5,
+              learning_velocity: 0.5,
+              avg_confidence: 0.5,
+              task_specializations: generateSpecializations(agent.sector || 'GENERAL'),
+              generation: 1,
+            })
+            .eq('id', agent.id);
+        });
+
+        await Promise.all(updates);
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Updated ${existingAgents.length} existing agents with tribe/evolution data`,
+          agentsUpdated: existingAgents.length,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
       }
     }
 
@@ -105,9 +151,7 @@ Deno.serve(async (req) => {
     const allBookOfLifeEntries: any[] = [];
 
     for (const tribe of TRIBES) {
-      const agentsToCreate = Math.min(agentsPerTribe, tribe.count);
-
-      for (let i = 0; i < agentsToCreate; i++) {
+      for (let i = 0; i < agentsPerTribe; i++) {
         const agentId = crypto.randomUUID();
         const name = generateAgentName(tribe.name, i);
         const designation = generateDesignation(tribe.name, i);
@@ -119,24 +163,37 @@ Deno.serve(async (req) => {
         else if (i < 10) role = 'elder';
         else if (i < 50) role = 'apprentice';
 
+        // Build agent matching existing schema + new evolution columns
         allAgents.push({
           id: agentId,
           user_id: userId,
-          org_id: orgId,
           name,
           designation,
-          avatar_seed: `${tribe.name}-${i}`,
-          tribe: tribe.name,
+
+          // Existing required columns
           sector: tribe.sector,
+          status: 'ACTIVE',
+          class: tribe.class,
+          waveform: tribe.waveform,
+          frequency: 100 + Math.random() * 900, // 100-1000 Hz
+          color: TRIBE_COLORS[tribe.name],
+          modulation: 0.3 + Math.random() * 0.4,
+          density: 0.5 + Math.random() * 0.3,
+          cycles: 0,
+          efficiency: 0.4 + Math.random() * 0.2,
+          stability: 0.5 + Math.random() * 0.3,
+          capabilities: Object.keys(specializations),
+          description: `${tribe.name} tribe agent specializing in ${tribe.sector.toLowerCase()}`,
+
+          // New evolution columns (will be added by migration)
+          tribe: tribe.name,
           role,
-          status: 'active',
           seal_level: 1,
           success_rate: 0.4 + Math.random() * 0.2,
           total_tasks_completed: Math.floor(Math.random() * 100),
           avg_confidence: 0.5 + Math.random() * 0.2,
           learning_velocity: 0.4 + Math.random() * 0.2,
           task_specializations: specializations,
-          capabilities: Object.keys(specializations),
           generation: 1,
           lineage_path: [],
         });
@@ -147,6 +204,8 @@ Deno.serve(async (req) => {
           birth_data: {
             seeded_at: new Date().toISOString(),
             seed_batch: `initial-${tribe.name.toLowerCase()}`,
+            tribe: tribe.name,
+            sector: tribe.sector,
           },
           parent_ids: [],
           generation: 1,
@@ -155,89 +214,98 @@ Deno.serve(async (req) => {
           total_descendants: 0,
           life_score: 0,
           achievements: ['genesis_born'],
-          titles: [role === 'leader' ? 'Tribal Leader' : role === 'elder' ? 'Tribal Elder' : ''],
+          titles: role === 'leader' ? ['Tribal Leader'] : role === 'elder' ? ['Tribal Elder'] : [],
         });
       }
     }
 
-    // Insert in batches
-    const BATCH_SIZE = 100;
+    // Insert agents in batches
+    const BATCH_SIZE = 50;
+    let insertedAgents = 0;
 
     for (let i = 0; i < allAgents.length; i += BATCH_SIZE) {
       const batch = allAgents.slice(i, i + BATCH_SIZE);
       const { error } = await supabase.from('sonic_agents').insert(batch);
       if (error) {
         console.error(`Error inserting agents batch ${i / BATCH_SIZE}:`, error);
+        // Continue with next batch
+      } else {
+        insertedAgents += batch.length;
       }
     }
 
+    // Insert book of life entries
+    let insertedBookEntries = 0;
     for (let i = 0; i < allBookOfLifeEntries.length; i += BATCH_SIZE) {
       const batch = allBookOfLifeEntries.slice(i, i + BATCH_SIZE);
       const { error } = await supabase.from('book_of_life').insert(batch);
       if (error) {
-        console.error(`Error inserting book_of_life batch ${i / BATCH_SIZE}:`, error);
+        console.error(`Error inserting book_of_life batch:`, error.message);
+        // Book of life table might not exist yet - that's ok
+      } else {
+        insertedBookEntries += batch.length;
       }
     }
 
     // Update tribe statistics
     for (const tribe of TRIBES) {
-      const count = Math.min(agentsPerTribe, tribe.count);
-
-      // Get leader agent
       const { data: leader } = await supabase
         .from('sonic_agents')
         .select('id')
         .eq('tribe', tribe.name)
         .eq('role', 'leader')
+        .eq('user_id', userId)
         .single();
 
-      // Get elder agents
       const { data: elders } = await supabase
         .from('sonic_agents')
         .select('id')
         .eq('tribe', tribe.name)
-        .eq('role', 'elder');
+        .eq('role', 'elder')
+        .eq('user_id', userId);
 
-      await supabase
+      const { error: updateError } = await supabase
         .from('temple_tribes')
         .update({
-          agent_count: count,
+          agent_count: agentsPerTribe,
           leader_agent_id: leader?.id || null,
           elder_agent_ids: elders?.map((e: any) => e.id) || [],
         })
         .eq('name', tribe.name);
+
+      if (updateError) {
+        console.log(`Temple tribes table might not exist yet: ${updateError.message}`);
+      }
     }
 
-    // Create initial user seals
-    if (userId) {
-      const { data: seals } = await supabase
-        .from('temple_seals')
-        .select('id, seal_number')
-        .order('seal_number');
+    // Initialize user seals
+    const { data: seals } = await supabase
+      .from('temple_seals')
+      .select('id, seal_number')
+      .order('seal_number');
 
-      if (seals) {
-        const userSeals = seals.map((seal: any) => ({
-          user_id: userId,
-          seal_id: seal.id,
-          status: seal.seal_number === 1 ? 'in_progress' : 'locked',
-          progress: seal.seal_number === 1 ? 0.1 : 0,
-        }));
+    if (seals && seals.length > 0) {
+      const userSeals = seals.map((seal: any) => ({
+        user_id: userId,
+        seal_id: seal.id,
+        status: seal.seal_number === 1 ? 'in_progress' : 'locked',
+        progress: seal.seal_number === 1 ? 0.1 : 0,
+      }));
 
-        await supabase.from('user_seals').upsert(userSeals, { onConflict: 'user_id,seal_id' });
-      }
+      await supabase.from('user_seals').upsert(userSeals, { onConflict: 'user_id,seal_id' });
     }
 
     const duration = Date.now() - startTime;
 
     return new Response(JSON.stringify({
       success: true,
-      message: `Successfully seeded ${allAgents.length} agents across ${TRIBES.length} tribes`,
+      message: `Seeded ${insertedAgents} agents across ${TRIBES.length} tribes`,
       summary: {
-        totalAgents: allAgents.length,
+        totalAgentsCreated: insertedAgents,
+        bookOfLifeEntries: insertedBookEntries,
         tribesSeeded: TRIBES.length,
-        agentsPerTribe: agentsPerTribe,
+        agentsPerTribe,
         durationMs: duration,
-        tribesWithLeaders: TRIBES.map(t => t.name),
       },
       metadata: {
         service: 'seed-agents',
